@@ -39,11 +39,6 @@ public class KafkaTwitterProducer {
 	public static void main(String[] args) throws Exception {
 		final LinkedBlockingQueue<Status> queue = new LinkedBlockingQueue<Status>(1000);
 
-		/*
-		 * if (args.length < 4) { System.out.println(
-		 * "Usage: KafkaTwitterProducer <twitter-consumer-key> <twitter-consumer-secret> <twitter-access-token> <twitter-access-token-secret> <topic-name> <twitter-search-keywords>"
-		 * ); return; }
-		 */
 
 		String consumerKey = "vQbjeTbZINRv6U1pl683cK9AR";// args[0].toString();
 		String consumerSecret = "WWZDixUaNfcDYC7yal1R2i7seq2bwwLOnGxSvvdMTp8y83Z6GT"; // args[1].toString();
@@ -108,11 +103,9 @@ public class KafkaTwitterProducer {
 		props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
 
 		Producer<String, String> producer = new KafkaProducer<String, String>(props);
-		int i = 0;
 		int j = 0;
 
-		// poll for new tweets in the queue. If new tweets are added, send them
-		// to the topic
+		// poll for new Tweets in the queue. If new Tweets are added, send them to the topic
 		while (true) {
 			Status ret = queue.poll();
 
