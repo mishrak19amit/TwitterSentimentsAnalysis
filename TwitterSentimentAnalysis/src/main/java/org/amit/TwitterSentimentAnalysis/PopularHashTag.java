@@ -45,7 +45,7 @@ public class PopularHashTag {
 		SparkConf conf = new SparkConf().setMaster("local[6]").setAppName("SparkKafka10WordCount");
 
 		// Read messages in batch of 30 seconds
-		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(60));
+		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(30));
 
 		// Start reading messages from Kafka and get DStream
 		final JavaInputDStream<ConsumerRecord<String, String>> stream = KafkaUtils.createDirectStream(jssc,
@@ -60,7 +60,7 @@ public class PopularHashTag {
 				.filter(x -> x.contains("#"));
 
 		// Take every word and return Tuple with (word,1)
-		JavaPairDStream<String, Integer> wordMap = words.mapToPair(x -> new Tuple2<String, Integer>(x, 1));
+		JavaPairDStream<String, Integer> wordMap = words.mapToPair(x -> new Tuple2<String, Integer>(x.toUpperCase(), 1));
 
 		JavaPairDStream<String, Integer> hashTagTotals = wordMap.reduceByKeyAndWindow((a, b) -> a + b,
 				new Duration(60000));

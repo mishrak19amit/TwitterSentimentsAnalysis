@@ -45,7 +45,7 @@ public class KafkaTwitterProducer {
 		String accessToken = "771398523313086466-4WeHgdsoKBPt15Gdqk9m20SxWwhFwem"; // args[2].toString();
 		String accessTokenSecret = "XY1RksJJMRoQO1xJuw6Mbpi62mCNHNdQ1gy28B1ZJrID6";// args[3].toString();
 		String topicName = "AmitTopic"; // args[4].toString();
-		String[] arguments = "Modi".split(" "); // args.clone(); Iphone,Iphone,Modi
+		String[] arguments = "Twinkle Modi India USA".split(" "); // args.clone(); Iphone,Iphone,Modi
 		String[] keyWords = Arrays.copyOfRange(arguments, 0, arguments.length);
 
 		// Set twitter oAuth tokens in the configuration
