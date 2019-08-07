@@ -1,14 +1,11 @@
 package org.amit.TwitterSentimentAnalysis;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.amit.elasticsearch.ElasticSearchImpl;
-import org.amit.model.Twitter;
 //import com.test.schema.ContactType;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -26,9 +23,10 @@ import org.apache.spark.streaming.kafka010.LocationStrategies;
 import scala.Tuple2;
 
 /**
- * @author Amit Mishra Modified on 5/06/19.
+ * @author Amit Mishra
+ * Modified on 5/06/19.
  */
-public class PopularHashTag {
+public class KakfaDataLossVerify {
 	public static void main(String[] argv) throws Exception {
 
 		// Configure Spark to connect to Kafka running on local machine
@@ -43,12 +41,12 @@ public class PopularHashTag {
 		kafkaParams.put(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, true);
 
 		// Configure Spark to listen messages in topic test
-		Collection<String> topics = Arrays.asList("twitterSentiment");
+		Collection<String> topics = Arrays.asList("dataLossVerify");
 
 		SparkConf conf = new SparkConf().setMaster("local[*]").setAppName("SparkKafka10WordCount");
 
 		// Read messages in batch of 30 seconds
-		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(30));
+		JavaStreamingContext jssc = new JavaStreamingContext(conf, Durations.seconds(1));
 
 		// Start reading messages from Kafka and get DStream
 		final JavaInputDStream<ConsumerRecord<String, String>> stream = KafkaUtils.createDirectStream(jssc,
@@ -62,11 +60,10 @@ public class PopularHashTag {
 		JavaDStream<String> words = lines.flatMap(x -> Arrays.asList(x.split(" ")).iterator());
 
 		// Take every word and return Tuple with (word,1)
-		JavaPairDStream<String, Integer> wordMap = words
-				.mapToPair(x -> new Tuple2<String, Integer>(x.toUpperCase(), 1));
+		JavaPairDStream<String, Integer> wordMap = words.mapToPair(x -> new Tuple2<String, Integer>(x.toUpperCase(), 1));
 
 		JavaPairDStream<String, Integer> hashTagTotals = wordMap.reduceByKeyAndWindow((a, b) -> a + b,
-				new Duration(60000));
+				new Duration(1000));
 
 		JavaPairDStream<Integer, String> swappedPair = hashTagTotals.mapToPair(x -> x.swap());
 
@@ -76,21 +73,9 @@ public class PopularHashTag {
 			x.collect();
 			List<Tuple2<Integer, String>> topList = x.take(10);
 			System.out.println(String.format("\nPopular topics in last 60 seconds (%s total):", x.count()));
-			Twitter twitter = new Twitter();
-			twitter.setTrendingKeyword("india");
-			Map<String, Integer> topHashTagsWithCount = new HashMap<>();
-			List<String> trendingTweets = new ArrayList<>();
 			for (Tuple2<Integer, String> pair : topList) {
 				System.out.println(String.format("%s (%s tweets)", pair._2(), pair._1()));
-
-				trendingTweets.add(pair._2());
-				topHashTagsWithCount.put(pair._2(), pair._1());
-
 			}
-			twitter.setTopHashTags(trendingTweets);
-			twitter.setTopHashTagsWithCount(topHashTagsWithCount);
-			ElasticSearchImpl obj = new ElasticSearchImpl();
-			obj.insertPerson(twitter);
 		});
 
 		jssc.start();

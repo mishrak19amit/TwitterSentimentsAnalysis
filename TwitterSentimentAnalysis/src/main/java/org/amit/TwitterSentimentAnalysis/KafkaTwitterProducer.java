@@ -44,8 +44,8 @@ public class KafkaTwitterProducer {
 		String consumerSecret = "WWZDixUaNfcDYC7yal1R2i7seq2bwwLOnGxSvvdMTp8y83Z6GT"; // args[1].toString();
 		String accessToken = "771398523313086466-4WeHgdsoKBPt15Gdqk9m20SxWwhFwem"; // args[2].toString();
 		String accessTokenSecret = "XY1RksJJMRoQO1xJuw6Mbpi62mCNHNdQ1gy28B1ZJrID6";// args[3].toString();
-		String topicName = "AmitTopic"; // args[4].toString();
-		String[] arguments = "Twinkle Modi India USA".split(" "); // args.clone(); Iphone,Iphone,Modi
+		String topicName = "twitterSentiment"; // args[4].toString();
+		String[] arguments = "india".split(" "); // args.clone(); Iphone,Iphone,Modi
 		String[] keyWords = Arrays.copyOfRange(arguments, 0, arguments.length);
 
 		// Set twitter oAuth tokens in the configuration
@@ -118,7 +118,8 @@ public class KafkaTwitterProducer {
 					//System.out.println("Hashtag: " + hashtage.getText());
 					// producer.send(new ProducerRecord<String, String>(
 					// topicName, Integer.toString(j++), hashtage.getText()));
-					producer.send(new ProducerRecord<String, String>(topicName,Integer.toString(j++), ret.getText()));
+					//if(ret.isPossiblySensitive())
+					producer.send(new ProducerRecord<String, String>(topicName,Integer.toString(j++), hashtage.getText()));
 
 				}
 			}

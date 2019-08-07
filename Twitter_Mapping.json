@@ -1,0 +1,51 @@
+{
+   "mappings":{
+      "_doc":{
+         "properties":{
+            "hashTaglists":{
+               "properties":{
+                  "hashtag":{
+                     "type":"text",
+                     "fields":{
+                        "keyword":{
+                           "ignore_above":256,
+                           "type":"keyword"
+                        }
+                     }
+                  },
+                  "count":{
+                     "type": "integer"
+                  }
+               }
+            },
+            "TrendingKeyword":{
+               "type":"text",
+               "fields":{
+                  "keyword":{
+                     "ignore_above":256,
+                     "type":"keyword"
+                  }
+               }
+            },
+            "hashtags":{
+               "type":"text",
+               "fields":{
+                  "keyword":{
+                     "ignore_above":256,
+                     "type":"keyword"
+                  }
+               }
+            },
+            "UpdatedDate": {
+            "type":"text",
+               "fields":{
+                  "keyword":{
+                     "ignore_above":256,
+                     "type":"keyword"
+                  }
+               }
+        }
+         }
+      }
+   }
+}

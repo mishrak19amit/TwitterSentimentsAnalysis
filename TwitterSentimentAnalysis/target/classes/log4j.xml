@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration>
+
+<appender name="TwitterSentiment" class="org.apache.log4j.FileAppender">
+
+   <param name="file" value="./Logs/twitterSentiment.log"/>
+   <param name="immediateFlush" value="true"/>
+   <param name="threshold" value="debug"/>
+   <param name="append" value="false"/>
+   
+   <layout class="org.apache.log4j.PatternLayout">
+     <param name="ConversionPattern" value="%d [%-5p] %c.%M() %x - %m%n" />
+   </layout>
+</appender>
+
+<logger name="org.amit" additivity="false">
+   <level value="DEBUG"/>
+   <appender-ref ref="TwitterSentiment"/>
+</logger>
+
+</log4j:configuration>
